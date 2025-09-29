@@ -3,3 +3,5 @@ pub const POLL_ENDED: &[u8] = b"Poll has already ended";
 pub const POLL_NOT_ENDED: &[u8] = b"Poll is still active";
 pub const ALREADY_VOTED: &[u8] = b"You have already voted in this poll";
 pub const INVALID_OPTION_INDEX: &[u8] = b"Invalid option index";
+pub const DURATION_TOO_SHORT: &[u8] = b"Duration must be at least one hour";
+pub const DURATION_TOO_LONG: &[u8] = b"Duration must be at most 24 hours";

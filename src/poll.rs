@@ -1,6 +1,8 @@
 use multiversx_sc::imports::*;
 
 use crate::basics;
+use crate::basics::errors::DURATION_TOO_LONG;
+use crate::basics::errors::DURATION_TOO_SHORT;
 use basics::constants::Timestamp;
 use basics::constants::ENDED;
 use basics::constants::ONGOING;
@@ -22,6 +24,9 @@ pub trait PollModule:
         duration: Timestamp,
     ) -> usize {
         self.require_not_paused();
+        require!(duration >= basics::constants::ONE_HOUR, DURATION_TOO_SHORT);
+        require!(duration <= basics::constants::ONE_DAY, DURATION_TOO_LONG);
+
         let caller = self.blockchain().get_caller();
         let current_timestamp = self.blockchain().get_block_timestamp();
         let mut index = 0;
