@@ -9,10 +9,7 @@ pub const NO_PROPOSAL: &[u8] = b"Proposal does not exist";
 
 #[type_abi]
 #[derive(Debug, TopEncode, TopDecode, NestedEncode, NestedDecode)]
-pub struct Poll<M>
-where
-    M: ManagedTypeApi,
-{
+pub struct Poll<M: ManagedTypeApi> {
     pub initiator: ManagedAddress<M>,
     pub question: ManagedBuffer<M>,
     pub options: ManagedVec<M, ManagedBuffer<M>>,
