@@ -20,4 +20,10 @@ pub trait PulseSc:
 
     #[upgrade]
     fn upgrade(&self) {}
+
+    #[only_owner]
+    #[endpoint]
+    fn set_root_hash(&self, root_hash: basics::constants::Hash<Self::Api>) {
+        self.root_hash().set(&root_hash);
+    }
 }
