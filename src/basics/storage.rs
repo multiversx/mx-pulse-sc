@@ -31,6 +31,7 @@ pub trait StorageModule {
     #[storage_mapper("pollVoters")]
     fn poll_voter(&self, poll_index: usize) -> UnorderedSetMapper<ManagedAddress>;
 
+    #[view]
     #[storage_mapper("nextAvailablePollIndex")]
     fn next_available_poll_index(&self) -> SingleValueMapper<usize>;
 
