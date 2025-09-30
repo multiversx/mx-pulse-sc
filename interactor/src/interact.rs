@@ -30,6 +30,12 @@ impl Interact {
         interactor.set_current_dir_from_workspace("interactor");
 
         let owner_address = interactor.register_wallet(test_wallets::alice()).await;
+        let _ = interactor.register_wallet(test_wallets::bob()).await;
+        let _ = interactor.register_wallet(test_wallets::carol()).await;
+        let _ = interactor.register_wallet(test_wallets::dan()).await;
+        let _ = interactor.register_wallet(test_wallets::eve()).await;
+        let _ = interactor.register_wallet(test_wallets::frank()).await;
+        let _ = interactor.register_wallet(test_wallets::grace()).await;
 
         interactor.generate_blocks_until_epoch(1).await.unwrap();
 

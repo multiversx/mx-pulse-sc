@@ -41,7 +41,7 @@ pub async fn pulse_sc_cli() {
                 .await
         }
         Some(interact_cli::InteractCliCommand::EndPoll(args)) => {
-            interact.end_poll(args.index).await
+            interact.end_poll(args.index, None).await
         }
         Some(interact_cli::InteractCliCommand::VotePoll(args)) => {
             let proof: Vec<ManagedByteArray<StaticApi, { HASH_LENGTH }>> =

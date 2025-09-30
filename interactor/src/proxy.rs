@@ -177,6 +177,15 @@ where
             .original_result()
     }
 
+    pub fn next_available_poll_index(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("next_available_poll_index")
+            .original_result()
+    }
+
     pub fn get_total_votes<
         Arg0: ProxyArg<usize>,
     >(

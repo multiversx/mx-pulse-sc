@@ -74,20 +74,24 @@ impl Interact {
         println!("Result: {response:?}");
     }
 
-    pub async fn end_poll(&mut self, poll_index: u32) {
-        let response = self
+    pub async fn end_poll(&mut self, poll_index: u32, error: Option<ExpectError<'_>>) {
+        let tx = self
             .interactor
             .tx()
             .from(&self.owner_address)
             .to(self.state.current_address())
             .gas(30_000_000u64)
             .typed(proxy::PulseScProxy)
-            .end_poll(poll_index)
-            .returns(ReturnsResultUnmanaged)
-            .run()
-            .await;
+            .end_poll(poll_index);
 
-        println!("Result: {response:?}");
+        match error {
+            None => {
+                tx.returns(ReturnsResultUnmanaged).run().await;
+            }
+            Some(expect_error) => {
+                tx.returns(expect_error).run().await;
+            }
+        }
     }
 
     pub async fn vote_poll(
