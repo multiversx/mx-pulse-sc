@@ -41,7 +41,7 @@ pub trait PollModule:
         });
         let num_options = options.len();
         require!(
-            num_options >= MIN_OPTIONS && num_options <= MAX_OPTIONS,
+            (MIN_OPTIONS..=MAX_OPTIONS).contains(&num_options),
             ERROR_INVALID_NUMBER_OPTIONS
         );
 
