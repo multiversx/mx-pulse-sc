@@ -24,10 +24,10 @@ multiversx_sc_wasm_adapter::endpoints! {
         newPoll => new_poll
         endPoll => end_poll
         vote_poll => vote_poll
-        polls => polls
-        poll_votes => poll_votes
-        next_available_poll_index => next_available_poll_index
-        get_total_votes => get_total_votes
+        getPoll => polls
+        getPollVotes => poll_votes
+        getNextAvailablePollIndex => next_available_poll_index
+        getTotalVotes => get_total_votes
         confirmVotingPower => confirm_voting_power
         pause => pause_endpoint
         unpause => unpause_endpoint

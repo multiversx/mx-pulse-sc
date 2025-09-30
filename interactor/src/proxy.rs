@@ -156,7 +156,7 @@ where
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, Poll<Env::Api>> {
         self.wrapped_tx
             .payment(NotPayable)
-            .raw_call("polls")
+            .raw_call("getPoll")
             .argument(&index)
             .original_result()
     }
@@ -171,7 +171,7 @@ where
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
         self.wrapped_tx
             .payment(NotPayable)
-            .raw_call("poll_votes")
+            .raw_call("getPollVotes")
             .argument(&poll_index)
             .argument(&option_index)
             .original_result()
@@ -182,7 +182,7 @@ where
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
         self.wrapped_tx
             .payment(NotPayable)
-            .raw_call("next_available_poll_index")
+            .raw_call("getNextAvailablePollIndex")
             .original_result()
     }
 
@@ -194,7 +194,7 @@ where
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
         self.wrapped_tx
             .payment(NotPayable)
-            .raw_call("get_total_votes")
+            .raw_call("getTotalVotes")
             .argument(&poll_index)
             .original_result()
     }
