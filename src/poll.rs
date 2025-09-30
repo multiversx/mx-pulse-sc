@@ -2,6 +2,7 @@ use multiversx_sc::imports::*;
 
 use crate::basics;
 use crate::basics::constants::MAX_OPTIONS;
+use crate::basics::constants::MIN_OPTIONS;
 use crate::basics::constants::ONE_DAY;
 use crate::basics::constants::ONE_HOUR;
 use crate::basics::errors::DURATION_TOO_LONG;
@@ -40,7 +41,7 @@ pub trait PollModule:
         });
         let num_options = options.len();
         require!(
-            num_options > 1 && num_options <= MAX_OPTIONS,
+            num_options >= MIN_OPTIONS && num_options <= MAX_OPTIONS,
             ERROR_INVALID_NUMBER_OPTIONS
         );
 
