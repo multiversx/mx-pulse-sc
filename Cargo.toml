@@ -20,5 +20,8 @@ num-bigint = "0.4"
 [dev-dependencies.multiversx-sc-scenario]
 version = "0.60.0"
 
+[features]
+chain-simulator-tests = []
+
 [workspace]
 members = [".", "meta", "interactor"]
