@@ -29,27 +29,6 @@ pub enum InteractCliCommand {
 
     #[command(name = "votePoll", about = "Vote in poll")]
     VotePoll(VotePollArgs),
-
-    #[command(name = "polls", about = "Get poll details")]
-    Polls(PollArgs),
-
-    #[command(name = "pollVotes", about = "Get votes for poll option")]
-    PollVotes(PollAndOptionArgs),
-
-    #[command(name = "getTotalVotes", about = "Get total votes for poll")]
-    GetTotalVotes(PollArgs),
-
-    #[command(name = "confirmVotingPower", about = "Confirm voting power")]
-    ConfirmVotingPower(ConfirmVotingPowerArgs),
-
-    #[command(name = "pause", about = "Pause the contract")]
-    Pause,
-
-    #[command(name = "unpause", about = "Unpause the contract")]
-    Unpause,
-
-    #[command(name = "isPaused", about = "Check if the contract is paused")]
-    IsPaused,
 }
 
 #[derive(Default, Clone, PartialEq, Eq, Debug, Args)]

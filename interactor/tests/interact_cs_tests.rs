@@ -38,7 +38,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&allice),
             0,
-            3,
+            2,
             1000000000000000000,
             merkle_proofs.pairs[&allice].clone(),
             None,
@@ -52,7 +52,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&bob),
             0,
-            1,
+            0,
             2000000000000000000,
             merkle_proofs.pairs[&bob].clone(),
             Some(ExpectError(USER_ERROR_CODE, &"Invalid voting power proof")),
@@ -66,7 +66,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&bob),
             1,
-            1,
+            0,
             1000000000000000000,
             merkle_proofs.pairs[&bob].clone(),
             Some(ExpectError(
@@ -83,7 +83,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&bob),
             0,
-            5,
+            4,
             1000000000000000000,
             merkle_proofs.pairs[&bob].clone(),
             Some(ExpectError(
@@ -99,7 +99,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&bob),
             0,
-            1,
+            0,
             1000000000000000000,
             merkle_proofs.pairs[&bob].clone(),
             None,
@@ -111,7 +111,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&carol),
             0,
-            3,
+            2,
             2000000000000000000,
             merkle_proofs.pairs[&carol].clone(),
             None,
@@ -122,7 +122,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&dan),
             0,
-            3,
+            2,
             3000000000000000000,
             merkle_proofs.pairs[&dan].clone(),
             None,
@@ -133,7 +133,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&eve),
             0,
-            3,
+            2,
             4000000000000000000,
             merkle_proofs.pairs[&eve].clone(),
             None,
@@ -144,7 +144,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&grace),
             0,
-            2,
+            1,
             6000000000000000000,
             merkle_proofs.pairs[&grace].clone(),
             None,
@@ -157,7 +157,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&bob),
             0,
-            1,
+            0,
             1000000000000000000,
             merkle_proofs.pairs[&bob].clone(),
             Some(ExpectError(
@@ -185,7 +185,7 @@ async fn deploy_test_pulse_sc_cs() {
         .vote_poll(
             Bech32Address::from(&frank),
             0,
-            2,
+            3,
             5000000000000000000,
             merkle_proofs.pairs[&frank].clone(),
             Some(ExpectError(USER_ERROR_CODE, &"Poll has already ended")),
@@ -200,4 +200,53 @@ async fn deploy_test_pulse_sc_cs() {
             Some(ExpectError(USER_ERROR_CODE, &"Poll has already ended")),
         )
         .await;
+
+    // check votes scores
+
+    let poll = interactor.polls(0).await;
+    assert!(poll.status == false, "wrong status");
+    assert!(
+        poll.vote_score.get(0).clone_value() == BigUint::from(1000000000000000000u128),
+        "wrong score for option 0"
+    );
+    assert!(
+        poll.vote_score.get(1).clone_value() == BigUint::from(6000000000000000000u128),
+        "wrong score for option 1"
+    );
+    assert!(
+        poll.vote_score.get(2).clone_value() == BigUint::from(10000000000000000000u128),
+        "wrong score for option 2"
+    );
+    assert!(
+        poll.vote_score.get(3).clone_value() == BigUint::from(0u128),
+        "wrong score for option 3"
+    );
+
+    // check number of votes per option
+
+    let poll_votes_option_0 = interactor.poll_votes(0, 0).await;
+    assert!(
+        poll_votes_option_0 == 1,
+        "wrong number of votes for option 0"
+    );
+    let poll_votes_option_1 = interactor.poll_votes(0, 1).await;
+    assert!(
+        poll_votes_option_1 == 1,
+        "wrong number of votes for option 1"
+    );
+    let poll_votes_option_2 = interactor.poll_votes(0, 2).await;
+    assert!(
+        poll_votes_option_2 == 4,
+        "wrong number of votes for option 2"
+    );
+    let poll_votes_option_3 = interactor.poll_votes(0, 3).await;
+    assert!(
+        poll_votes_option_3 == 0,
+        "wrong number of votes for option 3"
+    );
+
+    // check total number of votes
+
+    let total_votes = interactor.get_total_votes(0).await;
+    assert!(total_votes == 6, "wrong total number of votes");
 }

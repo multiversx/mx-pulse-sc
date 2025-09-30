@@ -4,7 +4,11 @@ use multiversx_sc_snippets::{
     *,
 };
 
-use crate::{interact::HASH_LENGTH, proxy, Interact};
+use crate::{
+    interact::HASH_LENGTH,
+    proxy::{self, Poll},
+    Interact,
+};
 
 impl Interact {
     pub async fn deploy(&mut self) {
@@ -122,46 +126,37 @@ impl Interact {
         }
     }
 
-    pub async fn polls(&mut self, index: u32) {
-        let result_value = self
-            .interactor
+    pub async fn polls(&mut self, index: u32) -> Poll<StaticApi> {
+        self.interactor
             .query()
             .to(self.state.current_address())
             .typed(proxy::PulseScProxy)
             .polls(index)
-            .returns(ReturnsResultUnmanaged)
+            .returns(ReturnsResult)
             .run()
-            .await;
-
-        println!("Result: {result_value:?}");
+            .await
     }
 
-    pub async fn poll_votes(&mut self, poll_index: u32, option_index: u32) {
-        let result_value = self
-            .interactor
+    pub async fn poll_votes(&mut self, poll_index: u32, option_index: u32) -> usize {
+        self.interactor
             .query()
             .to(self.state.current_address())
             .typed(proxy::PulseScProxy)
             .poll_votes(poll_index, option_index)
-            .returns(ReturnsResultUnmanaged)
+            .returns(ReturnsResult)
             .run()
-            .await;
-
-        println!("Result: {result_value:?}");
+            .await
     }
 
-    pub async fn get_total_votes(&mut self, poll_index: u32) {
-        let result_value = self
-            .interactor
+    pub async fn get_total_votes(&mut self, poll_index: u32) -> usize {
+        self.interactor
             .query()
             .to(self.state.current_address())
             .typed(proxy::PulseScProxy)
             .get_total_votes(poll_index)
-            .returns(ReturnsResultUnmanaged)
+            .returns(ReturnsResult)
             .run()
-            .await;
-
-        println!("Result: {result_value:?}");
+            .await
     }
 
     pub async fn confirm_voting_power(

@@ -58,23 +58,6 @@ pub async fn pulse_sc_cli() {
                 )
                 .await
         }
-        Some(interact_cli::InteractCliCommand::Polls(args)) => interact.polls(args.index).await,
-        Some(interact_cli::InteractCliCommand::PollVotes(args)) => {
-            interact.poll_votes(args.index, args.option).await
-        }
-        Some(interact_cli::InteractCliCommand::GetTotalVotes(args)) => {
-            interact.get_total_votes(args.index).await
-        }
-        Some(interact_cli::InteractCliCommand::ConfirmVotingPower(args)) => {
-            let proof: Vec<ManagedByteArray<StaticApi, { HASH_LENGTH }>> =
-                get_proof_from_string(&args.proof);
-            interact
-                .confirm_voting_power(args.voting_power, proof)
-                .await
-        }
-        Some(interact_cli::InteractCliCommand::Pause) => interact.pause_endpoint().await,
-        Some(interact_cli::InteractCliCommand::Unpause) => interact.unpause_endpoint().await,
-        Some(interact_cli::InteractCliCommand::IsPaused) => interact.paused_status().await,
 
         None => {}
     }
