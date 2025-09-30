@@ -20,18 +20,18 @@ pub struct Poll<M: ManagedTypeApi> {
 
 #[multiversx_sc::module]
 pub trait StorageModule {
-    #[view]
+    #[view(getPoll)]
     #[storage_mapper("polls")]
     fn polls(&self, index: usize) -> SingleValueMapper<Poll<Self::Api>>;
 
-    #[view]
+    #[view(getPollVotes)]
     #[storage_mapper("pollVotes")]
     fn poll_votes(&self, poll_index: usize, option_index: usize) -> SingleValueMapper<usize>;
 
     #[storage_mapper("pollVoters")]
-    fn poll_voter(&self, poll_index: usize) -> UnorderedSetMapper<ManagedAddress>;
+    fn poll_voter(&self, poll_index: usize) -> SingleValueMapper<ManagedVec<ManagedAddress>>;
 
-    #[view]
+    #[view(getNextAvailablePollIndex)]
     #[storage_mapper("nextAvailablePollIndex")]
     fn next_available_poll_index(&self) -> SingleValueMapper<usize>;
 

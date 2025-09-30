@@ -1,7 +1,10 @@
 #[multiversx_sc::module]
 pub trait EventsModule {
-    #[event("poll_ended")]
+    #[event("new_poll")]
     fn new_poll_event(&self, #[indexed] poll_index: usize, #[indexed] question: &ManagedBuffer);
+
+    #[event("vote_cast")]
+    fn vote_cast_event(&self, #[indexed] voter: ManagedAddress, #[indexed] poll_index: usize);
 
     #[event("poll_ended")]
     fn poll_ended_event(

@@ -1,8 +1,12 @@
 use multiversx_sc::imports::*;
 
 use crate::basics;
+use crate::basics::constants::MAX_OPTIONS;
+use crate::basics::constants::ONE_DAY;
+use crate::basics::constants::ONE_HOUR;
 use crate::basics::errors::DURATION_TOO_LONG;
 use crate::basics::errors::DURATION_TOO_SHORT;
+use crate::basics::errors::ERROR_INVALID_NUMBER_OPTIONS;
 use basics::constants::Timestamp;
 use basics::constants::ENDED;
 use basics::constants::ONGOING;
@@ -24,8 +28,8 @@ pub trait PollModule:
         duration: Timestamp,
     ) -> usize {
         self.require_not_paused();
-        require!(duration >= basics::constants::ONE_HOUR, DURATION_TOO_SHORT);
-        require!(duration <= basics::constants::ONE_DAY, DURATION_TOO_LONG);
+        require!(duration >= ONE_HOUR, DURATION_TOO_SHORT);
+        require!(duration <= ONE_DAY, DURATION_TOO_LONG);
 
         let caller = self.blockchain().get_caller();
         let current_timestamp = self.blockchain().get_block_timestamp();
@@ -35,6 +39,10 @@ pub trait PollModule:
             *current_index += 1;
         });
         let num_options = options.len();
+        require!(
+            num_options > 1 && num_options <= MAX_OPTIONS,
+            ERROR_INVALID_NUMBER_OPTIONS
+        );
 
         let mut vote_score: ManagedVec<BigUint> = ManagedVec::new();
         for _ in 0..num_options {
@@ -65,7 +73,7 @@ pub trait PollModule:
 
         self.polls(poll_index).update(|poll| {
             require!(poll.status == ONGOING, POLL_ENDED);
-            require!(current_timestamp >= poll.end_time, POLL_NOT_ENDED);
+            require!(current_timestamp > poll.end_time, POLL_NOT_ENDED);
             poll.status = ENDED;
             let options_range = poll.options.len();
 
