@@ -186,6 +186,15 @@ where
             .original_result()
     }
 
+    pub fn root_hash(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ManagedByteArray<Env::Api, 32usize>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getVoterPolls")
+            .original_result()
+    }
+
     pub fn get_total_votes<
         Arg0: ProxyArg<usize>,
     >(
