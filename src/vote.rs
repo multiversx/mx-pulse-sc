@@ -29,10 +29,11 @@ pub trait VoteModule:
             require!(poll.status == ONGOING, POLL_ENDED);
             require!(option_index < poll.options.len(), INVALID_VOTING_POWER);
 
-            self.poll_voter(poll_index).update(|voters| {
-                require!(!voters.contains(&caller), ALREADY_VOTED);
-                voters.push(caller.clone())
-            });
+            require!(
+                !self.voter_polls(&caller).contains(&poll_index),
+                ALREADY_VOTED
+            );
+            self.voter_polls(&caller).insert(poll_index);
 
             let votes = poll.vote_score.get(option_index).clone() + voting_power;
             let _ = poll.vote_score.set(option_index, votes);
@@ -40,6 +41,6 @@ pub trait VoteModule:
         self.poll_votes(poll_index, option_index)
             .update(|votes| *votes += 1);
 
-        self.vote_cast_event(caller, poll_index);
+        self.vote_cast_event(caller, poll_index, option_index);
     }
 }

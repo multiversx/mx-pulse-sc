@@ -89,7 +89,6 @@ pub trait PollModule:
             }
         });
 
-        self.poll_voter(poll_index).clear();
         self.poll_ended_event(
             poll_index,
             winner_option_index,
