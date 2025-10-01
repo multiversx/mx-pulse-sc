@@ -29,11 +29,10 @@ pub trait VoteModule:
             require!(poll.status == ONGOING, POLL_ENDED);
             require!(option_index < poll.options.len(), INVALID_VOTING_POWER);
 
-            require!(
-                !self.voter_polls(&caller).contains(&poll_index),
-                ALREADY_VOTED
-            );
-            self.voter_polls(&caller).insert(poll_index);
+            let mut poll_voters = self.poll_voters(poll_index);
+            require!(!poll_voters.contains(&caller), ALREADY_VOTED);
+
+            poll_voters.insert(caller.clone());
 
             let votes = poll.vote_score.get(option_index).clone() + voting_power;
             let _ = poll.vote_score.set(option_index, votes);
