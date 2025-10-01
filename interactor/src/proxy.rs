@@ -191,7 +191,7 @@ where
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ManagedByteArray<Env::Api, 32usize>> {
         self.wrapped_tx
             .payment(NotPayable)
-            .raw_call("getVoterPolls")
+            .raw_call("getRootHash")
             .original_result()
     }
 
