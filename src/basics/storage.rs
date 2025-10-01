@@ -35,7 +35,7 @@ pub trait StorageModule {
     #[storage_mapper("nextAvailablePollIndex")]
     fn next_available_poll_index(&self) -> SingleValueMapper<usize>;
 
-    #[view(getVoterPolls)]
+    #[view(getRootHash)]
     #[storage_mapper("rootHash")]
     fn root_hash(&self) -> SingleValueMapper<Hash<Self::Api>>;
 }
