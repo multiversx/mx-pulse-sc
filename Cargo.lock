@@ -581,6 +581,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "multiversx-sc-modules"
+version = "0.60.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "273ac1e35d693c290759e5dfd8f29b71a4484800bf890a0bdbf466004b8d6a9f"
+dependencies = [
+ "multiversx-sc",
+]
+
+[[package]]
 name = "multiversx-sc-scenario"
 version = "0.60.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -688,6 +697,7 @@ name = "pulse-sc"
 version = "0.0.0"
 dependencies = [
  "multiversx-sc",
+ "multiversx-sc-modules",
  "multiversx-sc-scenario",
  "num-bigint",
 ]
