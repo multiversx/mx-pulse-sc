@@ -4,7 +4,12 @@ pub trait EventsModule {
     fn new_poll_event(&self, #[indexed] poll_index: usize, #[indexed] question: &ManagedBuffer);
 
     #[event("vote_cast")]
-    fn vote_cast_event(&self, #[indexed] voter: ManagedAddress, #[indexed] poll_index: usize);
+    fn vote_cast_event(
+        &self,
+        #[indexed] voter: ManagedAddress,
+        #[indexed] poll_index: usize,
+        #[indexed] option_index: usize,
+    );
 
     #[event("poll_ended")]
     fn poll_ended_event(

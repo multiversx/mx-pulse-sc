@@ -29,12 +29,13 @@ pub trait StorageModule {
     fn poll_votes(&self, poll_index: usize, option_index: usize) -> SingleValueMapper<usize>;
 
     #[storage_mapper("pollVoters")]
-    fn poll_voter(&self, poll_index: usize) -> SingleValueMapper<ManagedVec<ManagedAddress>>;
+    fn poll_voters(&self, poll_index: usize) -> UnorderedSetMapper<ManagedAddress>;
 
     #[view(getNextAvailablePollIndex)]
     #[storage_mapper("nextAvailablePollIndex")]
     fn next_available_poll_index(&self) -> SingleValueMapper<usize>;
 
+    #[view(getVoterPolls)]
     #[storage_mapper("rootHash")]
     fn root_hash(&self) -> SingleValueMapper<Hash<Self::Api>>;
 }

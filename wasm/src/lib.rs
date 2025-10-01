@@ -27,6 +27,7 @@ multiversx_sc_wasm_adapter::endpoints! {
         getPoll => polls
         getPollVotes => poll_votes
         getNextAvailablePollIndex => next_available_poll_index
+        getRootHash => root_hash
         getTotalVotes => get_total_votes
         confirmVotingPower => confirm_voting_power
         pause => pause_endpoint
