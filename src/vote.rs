@@ -1,7 +1,9 @@
 use multiversx_sc::imports::*;
 
 use crate::basics::constants::{HASH_LENGTH, ONGOING};
-use crate::basics::errors::{ALREADY_VOTED, INVALID_VOTING_POWER, POLL_ENDED};
+use crate::basics::errors::{
+    ALREADY_VOTED, INVALID_OPTION_INDEX, INVALID_POLL_INDEX, INVALID_VOTING_POWER, POLL_ENDED,
+};
 use crate::{basics::events, basics::storage, basics::views};
 
 #[multiversx_sc::module]
@@ -24,10 +26,11 @@ pub trait VoteModule:
         let caller = self.blockchain().get_caller();
         let voting_power_check = self.verify_merkle_proof(&caller, &voting_power, proof);
         require!(voting_power_check, INVALID_VOTING_POWER);
+        require!(!self.polls(poll_index).is_empty(), INVALID_POLL_INDEX);
 
         self.polls(poll_index).update(|poll| {
             require!(poll.status == ONGOING, POLL_ENDED);
-            require!(option_index < poll.options.len(), INVALID_VOTING_POWER);
+            require!(option_index < poll.options.len(), INVALID_OPTION_INDEX);
 
             let vote_success = self.poll_voters(poll_index).insert(caller.clone());
             require!(vote_success, ALREADY_VOTED);
