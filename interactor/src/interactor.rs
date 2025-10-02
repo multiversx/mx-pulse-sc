@@ -37,6 +37,7 @@ pub async fn pulse_sc_cli() {
                     &args.question,
                     args.options.iter().map(|s| s.as_str()).collect(),
                     args.duration,
+                    None,
                 )
                 .await
         }
