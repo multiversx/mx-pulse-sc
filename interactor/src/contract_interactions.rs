@@ -62,20 +62,44 @@ impl Interact {
         println!("Result: {response:?}");
     }
 
-    pub async fn new_poll(&mut self, question: &str, options: Vec<&str>, duration: u64) {
-        let response = self
+    pub async fn new_poll(
+        &mut self,
+        question: &str,
+        options: Vec<&str>,
+        duration: u64,
+        error: Option<ExpectError<'_>>,
+    ) {
+        let tx = self
             .interactor
             .tx()
             .from(&self.owner_address)
             .to(self.state.current_address())
             .gas(30_000_000u64)
             .typed(proxy::PulseScProxy)
-            .new_poll(question, options, duration)
+            .new_poll(question, options, duration);
+
+        match error {
+            None => {
+                tx.returns(ReturnsResultUnmanaged).run().await;
+            }
+            Some(expect_error) => {
+                tx.returns(expect_error).run().await;
+            }
+        }
+    }
+    pub async fn add_admin(&mut self, admin: Bech32Address) {
+        let tx = self
+            .interactor
+            .tx()
+            .from(&self.owner_address)
+            .to(self.state.current_address())
+            .gas(30_000_000u64)
+            .typed(proxy::PulseScProxy)
+            .add_admin(admin)
             .returns(ReturnsResultUnmanaged)
             .run()
             .await;
-
-        println!("Result: {response:?}");
+        println!("Result: {tx:?}");
     }
 
     pub async fn end_poll(&mut self, poll_index: u32, error: Option<ExpectError<'_>>) {
