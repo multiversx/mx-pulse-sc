@@ -55,7 +55,7 @@ pub trait StorageModule {
     #[storage_mapper("proposalUpVoters")]
     fn proposal_up_voters(&self, proposal_index: usize) -> UnorderedSetMapper<ManagedAddress>;
 
-    #[view(getNextAvailablePollIndex)]
+    #[view(getNextAvailableProposalIndex)]
     #[storage_mapper("nextAvailableProposalIndex")]
     fn next_available_proposal_index(&self) -> SingleValueMapper<usize>;
 }

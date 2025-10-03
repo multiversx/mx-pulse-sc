@@ -6,9 +6,9 @@
 
 // Init:                                 1
 // Upgrade:                              1
-// Endpoints:                           17
+// Endpoints:                           21
 // Async Callback (empty):               1
-// Total number of exported functions:  20
+// Total number of exported functions:  24
 
 #![no_std]
 
@@ -23,11 +23,15 @@ multiversx_sc_wasm_adapter::endpoints! {
         set_root_hash => set_root_hash
         newPoll => new_poll
         endPoll => end_poll
+        newProposal => new_proposal
         vote_poll => vote_poll
+        vote_up_proposal => vote_up_proposal
         getPoll => polls
         getPollVotes => poll_votes
         getNextAvailablePollIndex => next_available_poll_index
         getRootHash => root_hash
+        getProposal => proposals
+        getNextAvailableProposalIndex => next_available_proposal_index
         getTotalVotes => get_total_votes
         confirmVotingPower => confirm_voting_power
         pause => pause_endpoint
