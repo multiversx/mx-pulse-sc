@@ -184,7 +184,13 @@ impl Interact {
             .await
     }
 
-    pub async fn new_proposal(&mut self, caller: Bech32Address, proposal: &str) {
+    pub async fn new_proposal(
+        &mut self,
+        caller: Bech32Address,
+        proposal: &str,
+        voting_power: u128,
+        proof: Vec<ManagedByteArray<StaticApi, { HASH_LENGTH }>>,
+    ) {
         let tx = self
             .interactor
             .tx()
@@ -192,7 +198,7 @@ impl Interact {
             .to(self.state.current_address())
             .gas(30_000_000u64)
             .typed(proxy::PulseScProxy)
-            .new_proposal(proposal)
+            .new_proposal(proposal, voting_power, proof)
             .returns(ReturnsResult)
             .run()
             .await;

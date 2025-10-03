@@ -128,14 +128,20 @@ where
 
     pub fn new_proposal<
         Arg0: ProxyArg<ManagedBuffer<Env::Api>>,
+        Arg1: ProxyArg<BigUint<Env::Api>>,
+        Arg2: ProxyArg<ManagedVec<Env::Api, ManagedByteArray<Env::Api, 32usize>>>,
     >(
         self,
         description: Arg0,
+        voting_power: Arg1,
+        proof: Arg2,
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("newProposal")
             .argument(&description)
+            .argument(&voting_power)
+            .argument(&proof)
             .original_result()
     }
 

@@ -27,7 +27,12 @@ async fn proposal_test_pulse_sc_cs() {
     let frank = test_wallets::frank().to_address();
 
     interactor
-        .new_proposal(Bech32Address::from(&frank), "Lets order a pizza!")
+        .new_proposal(
+            Bech32Address::from(&frank),
+            "Lets order a pizza!",
+            5000000000000000000,
+            merkle_proofs.pairs[&frank].clone(),
+        )
         .await;
 
     let allice = test_wallets::alice().to_address();
@@ -137,4 +142,7 @@ async fn proposal_test_pulse_sc_cs() {
             )),
         )
         .await;
+
+    let total_votes = interactor.get_proposal_vote_ups(0).await;
+    assert!(total_votes == 6, "wrong number of vote ups");
 }
