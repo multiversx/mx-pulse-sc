@@ -13,7 +13,7 @@ const ROOT_HASH: &[u8; 64] = b"078bc8a05f5e62733ca27a4e0df5f5ff2d7327c9ab6c7f476
 
 #[tokio::test]
 #[cfg_attr(not(feature = "chain-simulator-tests"), ignore)]
-async fn deploy_test_pulse_sc_cs() {
+async fn poll_test_pulse_sc_cs() {
     let mut interactor = Interact::new(Config::chain_simulator_config()).await;
 
     let merkle_proofs = MerkleProofs::new();
@@ -87,7 +87,7 @@ async fn deploy_test_pulse_sc_cs() {
             merkle_proofs.pairs[&bob].clone(),
             Some(ExpectError(
                 USER_ERROR_CODE,
-                &"Poll index provided does not exist",
+                &"Index provided does not exist",
             )),
         )
         .await;
@@ -263,6 +263,6 @@ async fn deploy_test_pulse_sc_cs() {
 
     // check total number of votes
 
-    let total_votes = interactor.get_total_votes(0).await;
+    let total_votes = interactor.get_total_poll_votes(0).await;
     assert!(total_votes == 6, "wrong total number of votes");
 }

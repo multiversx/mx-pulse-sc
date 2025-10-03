@@ -5,5 +5,5 @@ pub const ALREADY_VOTED: &[u8] = b"You have already voted in this poll";
 pub const INVALID_OPTION_INDEX: &[u8] = b"Option index provided does not exist";
 pub const DURATION_TOO_SHORT: &[u8] = b"Duration must be at least one hour";
 pub const DURATION_TOO_LONG: &[u8] = b"Duration must be at most 24 hours";
-pub const INVALID_POLL_INDEX: &[u8] = b"Poll index provided does not exist";
+pub const INVALID_INDEX: &[u8] = b"Index provided does not exist";
 pub const ERROR_INVALID_NUMBER_OPTIONS: &[u8] = b"Number of options must be between 2 and 5";

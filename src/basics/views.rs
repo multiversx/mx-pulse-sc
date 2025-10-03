@@ -4,14 +4,19 @@ use crate::{basics::constants::HASH_LENGTH, basics::storage};
 
 #[multiversx_sc::module]
 pub trait ViewsModule: storage::StorageModule {
-    #[view(getTotalVotes)]
-    fn get_total_votes(&self, poll_index: usize) -> usize {
+    #[view(getTotalPollVotes)]
+    fn get_total_poll_votes(&self, poll_index: usize) -> usize {
         let poll = self.polls(poll_index).get();
         let mut total_votes = 0;
         for option_index in 0..poll.options.len() {
             total_votes += self.poll_votes(poll_index, option_index).get();
         }
         total_votes
+    }
+
+    #[view(getProposalVoteUps)]
+    fn get_proposal_vote_ups(&self, proposal_index: usize) -> usize {
+        self.proposal_up_voters(proposal_index).len()
     }
 
     #[view(confirmVotingPower)]

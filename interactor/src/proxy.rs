@@ -249,7 +249,7 @@ where
             .original_result()
     }
 
-    pub fn get_total_votes<
+    pub fn get_total_poll_votes<
         Arg0: ProxyArg<usize>,
     >(
         self,
@@ -257,8 +257,21 @@ where
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
         self.wrapped_tx
             .payment(NotPayable)
-            .raw_call("getTotalVotes")
+            .raw_call("getTotalPollVotes")
             .argument(&poll_index)
+            .original_result()
+    }
+
+    pub fn get_proposal_vote_ups<
+        Arg0: ProxyArg<usize>,
+    >(
+        self,
+        proposal_index: Arg0,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getProposalVoteUps")
+            .argument(&proposal_index)
             .original_result()
     }
 

@@ -87,6 +87,7 @@ impl Interact {
             }
         }
     }
+
     pub async fn add_admin(&mut self, admin: Bech32Address) {
         let tx = self
             .interactor
@@ -172,12 +173,66 @@ impl Interact {
             .await
     }
 
-    pub async fn get_total_votes(&mut self, poll_index: u32) -> usize {
+    pub async fn get_total_poll_votes(&mut self, poll_index: u32) -> usize {
         self.interactor
             .query()
             .to(self.state.current_address())
             .typed(proxy::PulseScProxy)
-            .get_total_votes(poll_index)
+            .get_total_poll_votes(poll_index)
+            .returns(ReturnsResult)
+            .run()
+            .await
+    }
+
+    pub async fn new_proposal(&mut self, caller: Bech32Address, proposal: &str) {
+        let tx = self
+            .interactor
+            .tx()
+            .from(&caller)
+            .to(self.state.current_address())
+            .gas(30_000_000u64)
+            .typed(proxy::PulseScProxy)
+            .new_proposal(proposal)
+            .returns(ReturnsResult)
+            .run()
+            .await;
+
+        println!("Result: {tx:?}");
+    }
+
+    pub async fn vote_up_proposal(
+        &mut self,
+        voter: Bech32Address,
+        proposal_index: u32,
+        voting_power: u128,
+        proof: Vec<ManagedByteArray<StaticApi, { HASH_LENGTH }>>,
+        error: Option<ExpectError<'_>>,
+    ) {
+        let tx = self
+            .interactor
+            .tx()
+            .from(voter)
+            .to(self.state.current_address())
+            .gas(30_000_000u64)
+            .typed(proxy::PulseScProxy)
+            .vote_up_proposal(proposal_index, voting_power, proof);
+
+        match error {
+            None => {
+                tx.returns(ReturnsResultUnmanaged).run().await;
+            }
+            Some(expect_error) => {
+                tx.returns(expect_error).run().await;
+            }
+        }
+    }
+
+    pub async fn get_proposal_vote_ups(&mut self, proposal_index: u32) -> usize {
+        self.interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::PulseScProxy)
+            .get_proposal_vote_ups(proposal_index)
             .returns(ReturnsResult)
             .run()
             .await
