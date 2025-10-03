@@ -41,6 +41,35 @@ pub trait VoteModule:
         self.poll_votes(poll_index, option_index)
             .update(|votes| *votes += 1);
 
-        self.vote_cast_event(caller, poll_index, option_index);
+        self.poll_vote_cast_event(caller, poll_index, option_index);
+    }
+
+    #[endpoint]
+    fn vote_up_proposal(
+        &self,
+        proposal_index: usize,
+        voting_power: BigUint,
+        proof: ManagedVec<ManagedByteArray<HASH_LENGTH>>,
+    ) {
+        self.require_not_paused();
+
+        let caller = self.blockchain().get_caller();
+        let voting_power_check = self.verify_merkle_proof(&caller, &voting_power, proof);
+        require!(voting_power_check, INVALID_VOTING_POWER);
+        require!(
+            !self.proposals(proposal_index).is_empty(),
+            INVALID_POLL_INDEX
+        );
+
+        let vote_success = self
+            .proposal_up_voters(proposal_index)
+            .insert(caller.clone());
+        require!(vote_success, ALREADY_VOTED);
+
+        self.proposals(proposal_index).update(|proposal| {
+            proposal.vote_score += &voting_power;
+        });
+
+        self.proposal_vote_cast_event(caller, proposal_index);
     }
 }
