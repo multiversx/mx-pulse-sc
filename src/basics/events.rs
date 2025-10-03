@@ -6,7 +6,8 @@ pub trait EventsModule {
     #[event("poll_vote_cast")]
     fn poll_vote_cast_event(
         &self,
-        #[indexed] voter: ManagedAddress,
+        #[indexed] voter: &ManagedAddress,
+        #[indexed] voting_power: &BigUint,
         #[indexed] poll_index: usize,
         #[indexed] option_index: usize,
     );
@@ -30,7 +31,8 @@ pub trait EventsModule {
     #[event("proposal_vote_up_cast")]
     fn proposal_vote_cast_event(
         &self,
-        #[indexed] voter: ManagedAddress,
+        #[indexed] voter: &ManagedAddress,
+        #[indexed] voting_power: &BigUint,
         #[indexed] proposal_index: usize,
     );
 }

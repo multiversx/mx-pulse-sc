@@ -35,13 +35,13 @@ pub trait VoteModule:
             let vote_success = self.poll_voters(poll_index).insert(caller.clone());
             require!(vote_success, ALREADY_VOTED);
 
-            let votes = poll.vote_score.get(option_index).clone() + voting_power;
+            let votes = poll.vote_score.get(option_index).clone() + &voting_power;
             let _ = poll.vote_score.set(option_index, votes);
         });
         self.poll_votes(poll_index, option_index)
             .update(|votes| *votes += 1);
 
-        self.poll_vote_cast_event(caller, poll_index, option_index);
+        self.poll_vote_cast_event(&caller, &voting_power, poll_index, option_index);
     }
 
     #[endpoint]
@@ -67,6 +67,6 @@ pub trait VoteModule:
             proposal.vote_score += &voting_power;
         });
 
-        self.proposal_vote_cast_event(caller, proposal_index);
+        self.proposal_vote_cast_event(&caller, &voting_power, proposal_index);
     }
 }
