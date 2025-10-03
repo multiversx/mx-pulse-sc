@@ -3,10 +3,11 @@ pub trait EventsModule {
     #[event("new_poll")]
     fn new_poll_event(&self, #[indexed] poll_index: usize, #[indexed] question: &ManagedBuffer);
 
-    #[event("vote_cast")]
-    fn vote_cast_event(
+    #[event("poll_vote_cast")]
+    fn poll_vote_cast_event(
         &self,
-        #[indexed] voter: ManagedAddress,
+        #[indexed] voter: &ManagedAddress,
+        #[indexed] voting_power: &BigUint,
         #[indexed] poll_index: usize,
         #[indexed] option_index: usize,
     );
@@ -18,5 +19,20 @@ pub trait EventsModule {
         #[indexed] winning_option_index: usize,
         #[indexed] winning_option_vote_count: usize,
         #[indexed] winning_option_vote_score: &BigUint,
+    );
+
+    #[event("new_proposal")]
+    fn new_proposal_event(
+        &self,
+        #[indexed] proposal_index: usize,
+        #[indexed] description: &ManagedBuffer,
+    );
+
+    #[event("proposal_vote_up_cast")]
+    fn proposal_vote_cast_event(
+        &self,
+        #[indexed] voter: &ManagedAddress,
+        #[indexed] voting_power: &BigUint,
+        #[indexed] proposal_index: usize,
     );
 }

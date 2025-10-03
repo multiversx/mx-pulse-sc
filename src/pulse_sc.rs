@@ -2,17 +2,18 @@
 use multiversx_sc::imports::*;
 pub mod basics;
 pub mod poll;
+pub mod proposal;
 pub mod vote;
 
 #[multiversx_sc::contract]
 pub trait PulseSc:
     poll::PollModule
+    + proposal::ProposalModule
     + vote::VoteModule
     + basics::storage::StorageModule
     + basics::events::EventsModule
     + basics::views::ViewsModule
     + multiversx_sc_modules::pause::PauseModule
-    + multiversx_sc_modules::only_admin::OnlyAdminModule
 {
     #[init]
     fn init(&self) {

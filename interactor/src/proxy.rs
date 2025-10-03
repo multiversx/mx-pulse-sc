@@ -126,6 +126,25 @@ where
             .original_result()
     }
 
+    pub fn new_proposal<
+        Arg0: ProxyArg<ManagedBuffer<Env::Api>>,
+        Arg1: ProxyArg<BigUint<Env::Api>>,
+        Arg2: ProxyArg<ManagedVec<Env::Api, ManagedByteArray<Env::Api, 32usize>>>,
+    >(
+        self,
+        description: Arg0,
+        voting_power: Arg1,
+        proof: Arg2,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("newProposal")
+            .argument(&description)
+            .argument(&voting_power)
+            .argument(&proof)
+            .original_result()
+    }
+
     pub fn vote_poll<
         Arg0: ProxyArg<usize>,
         Arg1: ProxyArg<usize>,
@@ -143,6 +162,25 @@ where
             .raw_call("vote_poll")
             .argument(&poll_index)
             .argument(&option_index)
+            .argument(&voting_power)
+            .argument(&proof)
+            .original_result()
+    }
+
+    pub fn vote_up_proposal<
+        Arg0: ProxyArg<usize>,
+        Arg1: ProxyArg<BigUint<Env::Api>>,
+        Arg2: ProxyArg<ManagedVec<Env::Api, ManagedByteArray<Env::Api, 32usize>>>,
+    >(
+        self,
+        proposal_index: Arg0,
+        voting_power: Arg1,
+        proof: Arg2,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ()> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("vote_up_proposal")
+            .argument(&proposal_index)
             .argument(&voting_power)
             .argument(&proof)
             .original_result()
@@ -195,7 +233,29 @@ where
             .original_result()
     }
 
-    pub fn get_total_votes<
+    pub fn proposals<
+        Arg0: ProxyArg<usize>,
+    >(
+        self,
+        index: Arg0,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, Proposal<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getProposal")
+            .argument(&index)
+            .original_result()
+    }
+
+    pub fn next_available_proposal_index(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getNextAvailableProposalIndex")
+            .original_result()
+    }
+
+    pub fn get_total_poll_votes<
         Arg0: ProxyArg<usize>,
     >(
         self,
@@ -203,8 +263,21 @@ where
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
         self.wrapped_tx
             .payment(NotPayable)
-            .raw_call("getTotalVotes")
+            .raw_call("getTotalPollVotes")
             .argument(&poll_index)
+            .original_result()
+    }
+
+    pub fn get_proposal_vote_ups<
+        Arg0: ProxyArg<usize>,
+    >(
+        self,
+        proposal_index: Arg0,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, usize> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getProposalVoteUps")
+            .argument(&proposal_index)
             .original_result()
     }
 
@@ -250,54 +323,6 @@ where
             .raw_call("isPaused")
             .original_result()
     }
-
-    pub fn is_admin<
-        Arg0: ProxyArg<ManagedAddress<Env::Api>>,
-    >(
-        self,
-        address: Arg0,
-    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, bool> {
-        self.wrapped_tx
-            .payment(NotPayable)
-            .raw_call("isAdmin")
-            .argument(&address)
-            .original_result()
-    }
-
-    pub fn add_admin<
-        Arg0: ProxyArg<ManagedAddress<Env::Api>>,
-    >(
-        self,
-        address: Arg0,
-    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ()> {
-        self.wrapped_tx
-            .payment(NotPayable)
-            .raw_call("addAdmin")
-            .argument(&address)
-            .original_result()
-    }
-
-    pub fn remove_admin<
-        Arg0: ProxyArg<ManagedAddress<Env::Api>>,
-    >(
-        self,
-        address: Arg0,
-    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ()> {
-        self.wrapped_tx
-            .payment(NotPayable)
-            .raw_call("removeAdmin")
-            .argument(&address)
-            .original_result()
-    }
-
-    pub fn admins(
-        self,
-    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, MultiValueEncoded<Env::Api, ManagedAddress<Env::Api>>> {
-        self.wrapped_tx
-            .payment(NotPayable)
-            .raw_call("getAdmins")
-            .original_result()
-    }
 }
 
 #[type_abi]
@@ -312,4 +337,16 @@ where
     pub vote_score: ManagedVec<Api, BigUint<Api>>,
     pub end_time: u64,
     pub status: bool,
+}
+
+#[type_abi]
+#[derive(Debug, TopEncode, TopDecode, NestedEncode, NestedDecode)]
+pub struct Proposal<Api>
+where
+    Api: ManagedTypeApi,
+{
+    pub initiator: ManagedAddress<Api>,
+    pub description: ManagedBuffer<Api>,
+    pub vote_score: BigUint<Api>,
+    pub propose_time: u64,
 }

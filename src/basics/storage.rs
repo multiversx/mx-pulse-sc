@@ -18,6 +18,15 @@ pub struct Poll<M: ManagedTypeApi> {
     pub status: Status,
 }
 
+#[type_abi]
+#[derive(Debug, TopEncode, TopDecode, NestedEncode, NestedDecode)]
+pub struct Proposal<M: ManagedTypeApi> {
+    pub initiator: ManagedAddress<M>,
+    pub description: ManagedBuffer<M>,
+    pub vote_score: BigUint<M>,
+    pub propose_time: Timestamp,
+}
+
 #[multiversx_sc::module]
 pub trait StorageModule {
     #[view(getPoll)]
@@ -38,4 +47,15 @@ pub trait StorageModule {
     #[view(getRootHash)]
     #[storage_mapper("rootHash")]
     fn root_hash(&self) -> SingleValueMapper<Hash<Self::Api>>;
+
+    #[view(getProposal)]
+    #[storage_mapper("proposals")]
+    fn proposals(&self, index: usize) -> SingleValueMapper<Proposal<Self::Api>>;
+
+    #[storage_mapper("proposalUpVoters")]
+    fn proposal_up_voters(&self, proposal_index: usize) -> UnorderedSetMapper<ManagedAddress>;
+
+    #[view(getNextAvailableProposalIndex)]
+    #[storage_mapper("nextAvailableProposalIndex")]
+    fn next_available_proposal_index(&self) -> SingleValueMapper<usize>;
 }
