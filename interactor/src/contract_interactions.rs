@@ -88,21 +88,6 @@ impl Interact {
         }
     }
 
-    pub async fn add_admin(&mut self, admin: Bech32Address) {
-        let tx = self
-            .interactor
-            .tx()
-            .from(&self.owner_address)
-            .to(self.state.current_address())
-            .gas(30_000_000u64)
-            .typed(proxy::PulseScProxy)
-            .add_admin(admin)
-            .returns(ReturnsResultUnmanaged)
-            .run()
-            .await;
-        println!("Result: {tx:?}");
-    }
-
     pub async fn end_poll(&mut self, poll_index: u32, error: Option<ExpectError<'_>>) {
         let tx = self
             .interactor

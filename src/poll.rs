@@ -19,12 +19,8 @@ use basics::storage::Poll;
 
 #[multiversx_sc::module]
 pub trait PollModule:
-    storage::StorageModule
-    + events::EventsModule
-    + multiversx_sc_modules::pause::PauseModule
-    + multiversx_sc_modules::only_admin::OnlyAdminModule
+    storage::StorageModule + events::EventsModule + multiversx_sc_modules::pause::PauseModule
 {
-    #[only_admin]
     #[endpoint(newPoll)]
     fn new_poll(
         &self,

@@ -25,21 +25,7 @@ async fn poll_test_pulse_sc_cs() {
             root_hash.as_slice().try_into().unwrap(),
         ))
         .await;
-    interactor
-        .new_poll(
-            "What's your favourite fruit?",
-            vec!["apple", "grape", "watermelon", "tomato"],
-            ONE_HOUR,
-            Some(ExpectError(
-                USER_ERROR_CODE,
-                &"Endpoint can only be called by admins",
-            )),
-        )
-        .await;
-
     let allice = test_wallets::alice().to_address();
-
-    interactor.add_admin(Bech32Address::from(&allice)).await;
 
     interactor
         .new_poll(

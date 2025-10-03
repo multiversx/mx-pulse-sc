@@ -14,7 +14,6 @@ pub trait PulseSc:
     + basics::events::EventsModule
     + basics::views::ViewsModule
     + multiversx_sc_modules::pause::PauseModule
-    + multiversx_sc_modules::only_admin::OnlyAdminModule
 {
     #[init]
     fn init(&self) {

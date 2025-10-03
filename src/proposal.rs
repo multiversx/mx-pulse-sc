@@ -14,7 +14,6 @@ pub trait ProposalModule:
     + events::EventsModule
     + views::ViewsModule
     + multiversx_sc_modules::pause::PauseModule
-    + multiversx_sc_modules::only_admin::OnlyAdminModule
 {
     #[endpoint(newProposal)]
     fn new_proposal(
