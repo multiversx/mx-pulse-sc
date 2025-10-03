@@ -12,7 +12,6 @@ pub trait ProposalModule:
     + multiversx_sc_modules::pause::PauseModule
     + multiversx_sc_modules::only_admin::OnlyAdminModule
 {
-    #[only_admin]
     #[endpoint(newProposal)]
     fn new_proposal(&self, description: ManagedBuffer) -> usize {
         self.require_not_paused();
